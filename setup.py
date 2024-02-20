@@ -11,7 +11,7 @@ setup(
     description="Your tools for ITCPR",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/abdussamiakanda/itcpr-tools",
+    url="https://github.com/ITCPR/itcpr-tools",
     author="Md. Abdus Sami Akanda",
     author_email="abdussamiakanda@gmail.com",
     license="MIT",classifiers=[
