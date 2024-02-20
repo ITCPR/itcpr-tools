@@ -1,0 +1,10 @@
+##my files
+bin/
+include/
+Scripts/
+dist/
+build/
+Lib/
+itcpr.egg-info/
+pyvenv.cfg
+__pycache__/
