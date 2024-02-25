@@ -7,7 +7,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="itcpr",
-    version="1.0.6",
+    version="1.0.8",
     description="Your tools for ITCPR",
     long_description=README,
     long_description_content_type="text/markdown",

@@ -4,20 +4,6 @@ import itertools
 import os
 import glob
 
-
-def start():
-    f = open("progress.txt","a")
-    f.writelines(["# Data:False\n"])
-    f.close()
-    
-    url = 'https://drive.google.com/uc?export=download&id=1kLBuhoDUUvrJOuBOLUGff0JYr8dB_nQJ'
-    r = requests.get(url, allow_redirects=True)
-    open('vocabulary.txt', 'wb').write(r.content)
-    
-    print("Welcome to your python GRE preparation tool. Necessary files are created.")
-    print("To learn more about GRE use 'gre.about()', and to learn more about this library use 'gre.help()'.")
-
-
 def plot(file_path, parameter_names):
     """
     Plots specified parameters from a given file.
@@ -67,19 +53,30 @@ def plot(file_path, parameter_names):
     plt.show()
 
 
+def float_range(start, stop, step):
+    """
+    Generates a list of numbers from start to stop with a given step increment, works with floats.
+    """
+    while start < stop:
+        yield round(start, 10)  # Round to avoid floating-point arithmetic issues
+        start += step
 
 def m3_commands(base_folder, filename_pattern, ranges):
     """
     Prints mumax3 commands for files based on a pattern with multiple 'cng' placeholders,
     each having different start, end values, and increments, and then prints 'mumax3' at the end.
+    This version supports fractional increments and adjusts the base_folder path for Windows compatibility.
     
     Args:
     - base_folder: The base folder address where the files are located or will be saved.
     - filename_pattern: The pattern of the filename with 'cng' as placeholders.
     - ranges: A list of tuples, each tuple contains (start_value, end_value, increment) for each 'cng'.
     """
-    # Generate all combinations of replacements for 'cng'
-    replacement_lists = [list(range(start, end + 1, increment)) for start, end, increment in ranges]
+    # Adjust the base_folder path for Windows compatibility
+    base_folder = base_folder.replace('/', '\\')
+    
+    # Generate all combinations of replacements for 'cng' with support for fractional increments
+    replacement_lists = [list(float_range(start, end + increment, increment)) for start, end, increment in ranges]
     all_combinations = list(itertools.product(*replacement_lists))
     
     for combination in all_combinations:
@@ -90,7 +87,7 @@ def m3_commands(base_folder, filename_pattern, ranges):
         for value in combination:
             filename = filename.replace('cng', str(value), 1)  # Replace the first occurrence
         
-        full_command = f"mumax3 {base_folder}/{filename}"
+        full_command = f"mumax3 {base_folder}\\{filename}"
         print(full_command)
     
     # Print the final 'mumax3' command
@@ -153,6 +150,24 @@ def plot_list(file_path):
     print("No parameters found or unable to read the file.")
     return []
 
+
+def dlt_ovf(folder_path):
+    # Count of deleted files for reporting
+    deleted_files_count = 0
+    
+    # Walk through all directories and files in the specified folder
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            if file.endswith(".ovf"):
+                file_path = os.path.join(root, file)
+                print(f"Deleting: {file_path}")
+                os.remove(file_path)  # Delete the file
+                deleted_files_count += 1
+    
+    print(f"Total .ovf files deleted: {deleted_files_count}")
+
+
+    
 def help():
     print("start() : builds necessary database for the package")
     print("hello() : gets you started with the package")
